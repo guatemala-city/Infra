@@ -43,6 +43,7 @@ Vagrant.configure("2") do |config|
 	  i.vm.network "public_network", use_dhcp_assigned_default_route: true
       i.vm.network "private_network", ip: "#{manager_ip}"
       i.vm.network "forwarded_port", guest: 8080, host: 8080
+	  i.vm.network "forwarded_port", guest: 9000, host: 9000
       
       i.vm.provision "shell", path: "./provision.sh"
 
@@ -58,7 +59,19 @@ Vagrant.configure("2") do |config|
       
 	  i.vm.provision "shell", inline: "docker swarm init --advertise-addr #{manager_ip}"
 	  i.vm.provision "shell", inline: "docker swarm join-token -q worker > /vagrant/token"
-     
+	
+       
+	  if File.file?(".portainer-docker-compose.yml") 
+        i.vm.provision "file", source: ".portainer-docker-compose.yml", destination: "/tmp/portainer-docker-compose.yml"
+        i.vm.provision "shell", inline: "docker stack deploy --compose-file /tmp/portainer-docker-compose.yml portainer", privileged: true
+      end 
+  
+      if File.file?(".jenkins-docker-compose.yml") 
+        i.vm.provision "file", source: ".jenkins-docker-compose.yml", destination: "/tmp/jenkins-docker-compose.yml"
+        i.vm.provision "shell", inline: "docker stack deploy --compose-file /tmp/jenkins-docker-compose.yml jenkins", privileged: true
+      end 
+  	
+	
     end 
 
   instances.each do |instance, i | 
@@ -83,6 +96,8 @@ Vagrant.configure("2") do |config|
 	  
       
       i.vm.provision "shell", inline: "docker swarm join --advertise-addr #{instance[:ip]} --listen-addr #{instance[:ip]}:2377 --token `cat /vagrant/token` #{manager_ip}:2377"
+	  i.vm.provision "shell", inline: "docker node update --label-add node.role=worker"
+	  i.vm.provision "shell", inline: "docker node update --label-add node.id=#{instance[:name]}"
     end 
   end
 end

@@ -1,0 +1,44 @@
+version: '3.4'
+
+networks:
+  host:
+    external: true
+
+    volumes:
+  portainer-data:
+    external: true
+
+services:
+  portainer:
+    image: portainer/portainer:1.15.0
+    networks:
+      host:
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: volume
+        source: portainer-data
+        target: /data
+    command:
+      - -H
+      - unix:///var/run/docker.sock
+    ports:
+      - target: 9000
+        published: 9000
+        protocol: tcp
+        mode: host
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        failure_action: pause
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - node.role==manager
