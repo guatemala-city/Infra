@@ -61,13 +61,13 @@ Vagrant.configure("2") do |config|
 	  i.vm.provision "shell", inline: "docker swarm join-token -q worker > /vagrant/token"
 	
        
-	  if File.file?(".portainer-docker-compose.yml") 
-        i.vm.provision "file", source: ".portainer-docker-compose.yml", destination: "/tmp/portainer-docker-compose.yml"
+	  if File.file?("./portainer-docker-compose.yml") 
+        i.vm.provision "file", source: "portainer-docker-compose.yml", destination: "/tmp/portainer-docker-compose.yml"
         i.vm.provision "shell", inline: "docker stack deploy --compose-file /tmp/portainer-docker-compose.yml portainer", privileged: true
       end 
   
-      if File.file?(".jenkins-docker-compose.yml") 
-        i.vm.provision "file", source: ".jenkins-docker-compose.yml", destination: "/tmp/jenkins-docker-compose.yml"
+      if File.file?("./jenkins-docker-compose.yml") 
+        i.vm.provision "file", source: "jenkins-docker-compose.yml", destination: "/tmp/jenkins-docker-compose.yml"
         i.vm.provision "shell", inline: "docker stack deploy --compose-file /tmp/jenkins-docker-compose.yml jenkins", privileged: true
       end 
   	
