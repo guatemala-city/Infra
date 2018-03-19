@@ -25,6 +25,7 @@ end
 manager_ip = "192.168.10.2"
 
 File.open("./hosts", 'w') { |file| 
+  file.write("#{manager_ip} manager manager\n")
   instances.each do |i|
     file.write("#{i[:ip]} #{i[:name]} #{i[:name]}\n")
   end
@@ -95,11 +96,12 @@ Vagrant.configure("2") do |config|
 	  i.vm.provision "shell", inline: "mkdir -p /var/jenkins", privileged: true
 	  i.vm.provision "shell", inline: "chmod -R 775  /var/jenkins/", privileged: true
 	  i.vm.provision "shell", inline: "chown ubuntu:  /var/jenkins/", privileged: true
-	  
       
       i.vm.provision "shell", inline: "docker swarm join --advertise-addr #{instance[:ip]} --listen-addr #{instance[:ip]}:2377 --token `cat /vagrant/token` #{manager_ip}:2377"
-	  i.vm.provision "shell", inline: "docker node update --label-add node.role=worker"
-	  i.vm.provision "shell", inline: "docker node update --label-add node.id=#{instance[:name]}"
+	  i.vm.provision "shell", inline: "sshpass -p ubuntu ssh ubuntu@manager docker node update #{instance[:name]} --label-add node.role=worker"
+	  i.vm.provision "shell", inline: "sshpass -p ubuntu ssh ubuntu@manager docker node update #{instance[:name]} --label-add node.label=#{instance[:name]}"
     end 
   end
+  
+  
 end
