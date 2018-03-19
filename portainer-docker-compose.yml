@@ -4,7 +4,7 @@ networks:
   host:
     external: true
 
-    volumes:
+volumes:
   portainer-data:
     external: true
 

@@ -5,11 +5,11 @@ networks:
     external: true
 
 volumes:
-  portainer-data:
+  jenkins_home:
     external: true
 
 services:
-  portainer:
+  jenkins:
     image: jenkins/jenkins:2.89.4
     networks:
       host:
@@ -17,7 +17,7 @@ services:
       - type: volume
         source: jenkins_home
         target: /var/jenkins_home
-     ports:
+    ports:
       - target: 8080
         published: 8080
         protocol: tcp
