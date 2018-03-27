@@ -4,9 +4,9 @@ networks:
   host:
     external: true
 
-volumes:
-  jenkins_home:
-    external: true
+#volumes:
+#  jenkins_home:
+#    external: true
 
 services:
   jenkins:
@@ -14,8 +14,8 @@ services:
     networks:
       host:
     volumes:
-      - type: volume
-        source: jenkins_home
+      - type: mount
+        source: /vagrant/jenkins_home
         target: /var/jenkins_home
     ports:
       - target: 8080

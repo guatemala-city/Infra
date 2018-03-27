@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
   
       if File.file?("./jenkins-docker-compose.yml") 
         i.vm.provision "file", source: "jenkins-docker-compose.yml", destination: "/tmp/jenkins-docker-compose.yml"
-		i.vm.provision "shell", inline: "docker volume create --name jenkins_home", privileged: true
+		#i.vm.provision "shell", inline: "docker volume create --name jenkins_home", privileged: true
         i.vm.provision "shell", inline: "docker stack deploy --compose-file /tmp/jenkins-docker-compose.yml jenkins", privileged: true
       end 
   	
