@@ -92,7 +92,7 @@ Vagrant.configure("2") do |config|
      
       i.vm.provision "shell", inline: "docker swarm join --advertise-addr #{instance[:ip]} --listen-addr #{instance[:ip]}:2377 --token `cat /vagrant/token` #{manager_ip}:2377"
 	  i.vm.provision "shell", inline: "sshpass -p ubuntu ssh ubuntu@manager docker node update #{instance[:name]} --label-add node.role=worker"
-	  i.vm.provision "shell", inline: "sshpass -p ubuntu ssh ubuntu@manager docker node update #{instance[:name]} --label-add node.label=#{instance[:name]}"
+	  i.vm.provision "shell", inline: "sshpass -p ubuntu ssh ubuntu@manager docker node update #{instance[:name]} --label-add id=#{instance[:name]}"
     end 
   end
   
