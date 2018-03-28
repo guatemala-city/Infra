@@ -14,7 +14,7 @@ services:
     networks:
       host:
     volumes:
-      - type: mount
+      - type: bind
         source: /vagrant/jenkins_home
         target: /var/jenkins_home
     ports:

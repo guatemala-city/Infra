@@ -7,6 +7,10 @@ sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/'  /etc/ssh/
 sudo sed -i 's/#   StrictHostKeyChecking ask/    StrictHostKeyChecking no/'  /etc/ssh/ssh_config
 sudo systemctl restart sshd
 
+sudo mkdir -p /var/jenkins
+sudo chmod -R 775  /var/jenkins/
+sudo chown ubuntu:  /var/jenkins/
+
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-key fingerprint 0EBFCD88
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"

@@ -10,7 +10,7 @@ volumes:
 
 services:
   portainer:
-    image: portainer/portainer:1.15.0
+    image: portainer/portainer
     networks:
       host:
     volumes:

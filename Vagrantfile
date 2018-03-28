@@ -60,7 +60,6 @@ Vagrant.configure("2") do |config|
       
 	  i.vm.provision "shell", inline: "docker swarm init --advertise-addr #{manager_ip}"
 	  i.vm.provision "shell", inline: "docker swarm join-token -q worker > /vagrant/token"
-	
        
 	  if File.file?("./portainer-docker-compose.yml") 
         i.vm.provision "file", source: "portainer-docker-compose.yml", destination: "/tmp/portainer-docker-compose.yml"
@@ -73,8 +72,6 @@ Vagrant.configure("2") do |config|
 		#i.vm.provision "shell", inline: "docker volume create --name jenkins_home", privileged: true
         i.vm.provision "shell", inline: "docker stack deploy --compose-file /tmp/jenkins-docker-compose.yml jenkins", privileged: true
       end 
-  	
-	
     end 
 
   instances.each do |instance, i | 
@@ -92,11 +89,7 @@ Vagrant.configure("2") do |config|
         i.vm.provision "file", source: "daemon.json", destination: "/tmp/daemon.json"
         i.vm.provision "shell", inline: "cat /tmp/daemon.json >> /etc/docker/daemon.json", privileged: true
       end 
-	  
-	  i.vm.provision "shell", inline: "mkdir -p /var/jenkins", privileged: true
-	  i.vm.provision "shell", inline: "chmod -R 775  /var/jenkins/", privileged: true
-	  i.vm.provision "shell", inline: "chown ubuntu:  /var/jenkins/", privileged: true
-      
+     
       i.vm.provision "shell", inline: "docker swarm join --advertise-addr #{instance[:ip]} --listen-addr #{instance[:ip]}:2377 --token `cat /vagrant/token` #{manager_ip}:2377"
 	  i.vm.provision "shell", inline: "sshpass -p ubuntu ssh ubuntu@manager docker node update #{instance[:name]} --label-add node.role=worker"
 	  i.vm.provision "shell", inline: "sshpass -p ubuntu ssh ubuntu@manager docker node update #{instance[:name]} --label-add node.label=#{instance[:name]}"
