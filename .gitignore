@@ -1,3 +1,6 @@
+/jenkins_*/*
 /.vagrant/*
 token
+hosts
 *.log
+*.orig

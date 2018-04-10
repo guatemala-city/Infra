@@ -21,6 +21,7 @@ sudo apt-get install -y docker-ce
 sudo usermod -aG docker vagrant
 sudo usermod -aG docker ubuntu
 sudo service docker start
+sudo systemctl enable docker
 docker info
 
 sudo curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
